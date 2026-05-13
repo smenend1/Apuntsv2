@@ -6,7 +6,7 @@
   <title>Apunts Lens v3</title>
   <meta name="theme-color" content="#2563eb" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -26,16 +26,12 @@
       <h2>1. Foto</h2>
       <p class="hint">Per pissarra manuscrita: fes la foto recta, amb bona llum i retalla només la zona de text.</p>
       <div class="uploadGrid">
-        <label class="upload">
-          <input id="cameraInput" type="file" accept="image/*" capture="environment" />
-          <span>Fer foto amb la càmera</span>
-        </label>
-        <label class="upload secondaryUpload">
-          <input id="galleryInput" type="file" accept="image/*" />
-          <span>Escollir de la galeria</span>
-        </label>
+        <button id="openCameraBtn" type="button" class="uploadBtn cameraBtn">📷 Fer foto</button>
+        <button id="openGalleryBtn" type="button" class="uploadBtn galleryBtn">🖼️ Escollir de la galeria</button>
       </div>
-      <p class="tiny">Al mòbil, usa “Escollir de la galeria” per triar una imatge existent. “Fer foto” obrirà la càmera.</p>
+      <input id="cameraInput" class="fileHidden" type="file" accept="image/*" capture="environment" />
+      <input id="galleryInput" class="fileHidden" type="file" accept="image/*" />
+      <p class="tiny"><strong>Important:</strong> són dos controls diferents. Si vols una foto guardada, toca “Escollir de la galeria”, no “Fer foto”.</p>
       <div class="canvasWrap">
         <canvas id="sourceCanvas"></canvas>
       </div>
@@ -110,9 +106,9 @@
   </main>
 
   <footer>
-    <p>Versió MVP v3. Ara separa càmera i galeria. El manuscrit de pissarra continua sent difícil; aquesta versió afegeix retall i preprocés per millorar-lo.</p>
+    <p>Versió MVP v4. Ara mostra dos botons reals: càmera i galeria. El manuscrit de pissarra continua sent difícil; aquesta versió afegeix retall i preprocés per millorar-lo.</p>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

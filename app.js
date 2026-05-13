@@ -12,12 +12,16 @@ let deferredPrompt = null;
 
 const cameraInput = $('#cameraInput');
 const galleryInput = $('#galleryInput');
+const openCameraBtn = $('#openCameraBtn');
+const openGalleryBtn = $('#openGalleryBtn');
 const controls = ['#rotateBtn','#cropBtn','#resetBtn','#processBtn','#ocrBtn'];
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; $('#installBtn').classList.remove('hidden'); });
 $('#installBtn').addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt = null; $('#installBtn').classList.add('hidden'); });
 
+openCameraBtn.addEventListener('click', () => cameraInput.click());
+openGalleryBtn.addEventListener('click', () => galleryInput.click());
 cameraInput.addEventListener('change', handleImageInput);
 galleryInput.addEventListener('change', handleImageInput);
 
