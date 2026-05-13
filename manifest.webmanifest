@@ -1,11 +1,10 @@
 {
   "name": "Apunts Lens",
-  "short_name": "Apunts",
-  "description": "Converteix fotos d'apunts en imatges d'apunts manuscrits ordenats.",
+  "short_name": "ApuntsLens",
+  "description": "Converteix fotos d'apunts o pissarres en apunts visuals.",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
-  "background_color": "#eef4ff",
+  "background_color": "#f7f2e8",
   "theme_color": "#2563eb",
   "orientation": "portrait",
   "icons": [

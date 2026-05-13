@@ -1,0 +1,1 @@
+{"scripts":{"start":"python3 -m http.server 8080","zip":"cd .. && zip -r apunts-lens-pwa-v2.zip apunts-lens-pwa-v2"},"dependencies":{},"devDependencies":{}}

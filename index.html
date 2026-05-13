@@ -1,84 +1,111 @@
 <!doctype html>
 <html lang="ca">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#2563eb" />
-  <meta name="description" content="PWA per convertir fotos d'apunts en una imatge d'apunts manuscrits ordenats." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Apunts Lens</title>
+  <meta name="theme-color" content="#2563eb" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
-  <script src="app.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
-  <header class="app-header">
+  <header class="topbar">
     <div>
-      <p class="eyebrow">PWA OCR + apunts</p>
       <h1>Apunts Lens</h1>
-      <p>Fes una foto, extreu el text i converteix-lo en una imatge d'apunts nets.</p>
+      <p>Foto → OCR → apunts → imatge manuscrita</p>
     </div>
+    <button id="installBtn" class="ghost hidden">Instal·la</button>
   </header>
 
   <main class="layout">
     <section class="card">
-      <h2>1. Foto o imatge</h2>
-      <p class="muted">Per a pissarra o lletra manuscrita, fes la foto amb bona llum i el més recta possible.</p>
-      <label class="dropzone" for="imageInput">
-        <span>📷 Toca per fer foto o pujar imatge</span>
-        <small>JPG, PNG o foto de la càmera</small>
+      <h2>1. Foto</h2>
+      <p class="hint">Per pissarra manuscrita: fes la foto recta, amb bona llum i retalla només la zona de text.</p>
+      <label class="upload">
+        <input id="imageInput" type="file" accept="image/*" capture="environment" />
+        <span>Fes o puja una foto</span>
       </label>
-      <input id="imageInput" type="file" accept="image/*" capture="environment" />
-      <img id="preview" alt="Previsualització de la imatge" hidden />
-      <div class="actions">
-        <button id="ocrButton" disabled>Fer OCR</button>
-        <button id="clearButton" class="secondary">Netejar</button>
+      <div class="canvasWrap">
+        <canvas id="sourceCanvas"></canvas>
       </div>
-      <progress id="ocrProgress" max="100" value="0" hidden></progress>
-      <p id="status" class="status" aria-live="polite"></p>
+      <div class="row">
+        <button id="rotateBtn" disabled>Gira</button>
+        <button id="cropBtn" disabled>Retalla selecció</button>
+        <button id="resetBtn" disabled>Restaura</button>
+      </div>
+      <p class="tiny">Retall: arrossega sobre la imatge per marcar la zona que vols llegir.</p>
     </section>
 
     <section class="card">
-      <h2>2. Text detectat</h2>
-      <textarea id="rawText" placeholder="Aquí apareixerà el text OCR. També pots enganxar text manualment."></textarea>
-      <div class="actions">
-        <button id="notesButton">Generar apunts</button>
-        <button id="demoButton" class="secondary">Carregar exemple</button>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>3. Apunts ordenats</h2>
-      <textarea id="notesText" placeholder="Aquí es generarà una versió ordenada dels apunts."></textarea>
-      <div class="controls">
-        <label>
-          Títol
-          <input id="titleInput" type="text" value="Els meus apunts" />
+      <h2>2. Millora per OCR</h2>
+      <div class="grid2">
+        <label>Mode
+          <select id="preset">
+            <option value="whiteboard">Pissarra manuscrita</option>
+            <option value="paper">Full manuscrit</option>
+            <option value="printed">Text imprès</option>
+          </select>
         </label>
-        <label>
-          Estil
-          <select id="styleSelect">
-            <option value="clean">Apunts nets</option>
-            <option value="realistic">Més realista</option>
+        <label>Lectura
+          <select id="psm">
+            <option value="6">Bloc de text</option>
+            <option value="7">Una sola línia</option>
+            <option value="11">Text dispers</option>
           </select>
         </label>
       </div>
-      <div class="actions">
-        <button id="renderButton">Crear imatge</button>
-        <button id="downloadButton" class="secondary" disabled>Descarregar PNG</button>
+      <label>Contrast <input id="contrast" type="range" min="0" max="120" value="55" /></label>
+      <label>Llindar blanc/negre <input id="threshold" type="range" min="0" max="255" value="165" /></label>
+      <label>Ampliació <input id="scale" type="range" min="1" max="4" step="0.5" value="2.5" /></label>
+      <label class="check"><input id="binarize" type="checkbox" checked /> Passa a blanc/negre</label>
+      <label class="check"><input id="sharpen" type="checkbox" checked /> Enfoca lletres</label>
+      <div class="canvasWrap small"><canvas id="processedCanvas"></canvas></div>
+      <div class="row">
+        <button id="processBtn" disabled>Previsualitza millora</button>
+        <button id="ocrBtn" disabled class="primary">Fes OCR</button>
+      </div>
+      <progress id="progress" value="0" max="1" class="hidden"></progress>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section class="card wide">
+      <h2>3. Revisa el text</h2>
+      <p class="hint important">Amb pissarra manuscrita, revisa sempre aquesta caixa. Si l'OCR falla, escriu aquí les dues línies correctes i l'app igualment generarà els apunts.</p>
+      <textarea id="ocrText" placeholder="Aquí apareixerà el text OCR o pots escriure'l manualment..."></textarea>
+      <div class="grid2">
+        <label>Títol dels apunts <input id="titleInput" value="Apunts" /></label>
+        <label>Estil
+          <select id="styleSelect">
+            <option value="clean">Apunts nets</option>
+            <option value="notebook">Full de llibreta</option>
+            <option value="compact">Compacte</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <button id="notesBtn" class="primary">Genera apunts</button>
+        <button id="demoBtn">Prova amb exemple</button>
       </div>
     </section>
 
-    <section class="card preview-card">
-      <h2>4. Resultat</h2>
-      <canvas id="notesCanvas" width="1240" height="1754"></canvas>
-      <p class="muted">El resultat es genera amb Canvas, no amb IA d'imatge, perquè el text sigui controlable i més fidel.</p>
+    <section class="card wide">
+      <h2>4. Resultat en imatge</h2>
+      <div id="notesPreview" class="notesPage"></div>
+      <div class="row">
+        <button id="downloadBtn" disabled class="primary">Descarrega PNG</button>
+        <button id="copyBtn" disabled>Copia text estructurat</button>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>Funciona com a PWA. Instal·la-la des del navegador amb “Afegeix a la pantalla d'inici”.</p>
+    <p>Versió MVP. El manuscrit de pissarra continua sent difícil; aquesta versió afegeix retall i preprocés per millorar-lo.</p>
   </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
