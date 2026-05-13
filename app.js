@@ -10,20 +10,26 @@ let cropRect = null;
 let structuredText = '';
 let deferredPrompt = null;
 
-const input = $('#imageInput');
+const cameraInput = $('#cameraInput');
+const galleryInput = $('#galleryInput');
 const controls = ['#rotateBtn','#cropBtn','#resetBtn','#processBtn','#ocrBtn'];
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; $('#installBtn').classList.remove('hidden'); });
 $('#installBtn').addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt = null; $('#installBtn').classList.add('hidden'); });
 
-input.addEventListener('change', async e => {
+cameraInput.addEventListener('change', handleImageInput);
+galleryInput.addEventListener('change', handleImageInput);
+
+async function handleImageInput(e) {
   const file = e.target.files?.[0];
   if (!file) return;
   const img = await loadImage(file);
   originalImage = img; currentRotation = 0; cropRect = null;
   drawSource(); enableControls(true); processImage();
-});
+  cameraInput.value = '';
+  galleryInput.value = '';
+}
 
 $('#rotateBtn').addEventListener('click', () => { currentRotation = (currentRotation + 90) % 360; cropRect = null; drawSource(); processImage(); });
 $('#resetBtn').addEventListener('click', () => { cropRect = null; currentRotation = 0; drawSource(); processImage(); });

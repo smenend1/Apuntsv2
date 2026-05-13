@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Apunts Lens</title>
+  <title>Apunts Lens v3</title>
   <meta name="theme-color" content="#2563eb" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
@@ -16,7 +16,7 @@
   <header class="topbar">
     <div>
       <h1>Apunts Lens</h1>
-      <p>Foto → OCR → apunts → imatge manuscrita</p>
+      <p>Foto o galeria → OCR → apunts → imatge manuscrita</p>
     </div>
     <button id="installBtn" class="ghost hidden">Instal·la</button>
   </header>
@@ -25,10 +25,17 @@
     <section class="card">
       <h2>1. Foto</h2>
       <p class="hint">Per pissarra manuscrita: fes la foto recta, amb bona llum i retalla només la zona de text.</p>
-      <label class="upload">
-        <input id="imageInput" type="file" accept="image/*" capture="environment" />
-        <span>Fes o puja una foto</span>
-      </label>
+      <div class="uploadGrid">
+        <label class="upload">
+          <input id="cameraInput" type="file" accept="image/*" capture="environment" />
+          <span>Fer foto amb la càmera</span>
+        </label>
+        <label class="upload secondaryUpload">
+          <input id="galleryInput" type="file" accept="image/*" />
+          <span>Escollir de la galeria</span>
+        </label>
+      </div>
+      <p class="tiny">Al mòbil, usa “Escollir de la galeria” per triar una imatge existent. “Fer foto” obrirà la càmera.</p>
       <div class="canvasWrap">
         <canvas id="sourceCanvas"></canvas>
       </div>
@@ -103,7 +110,7 @@
   </main>
 
   <footer>
-    <p>Versió MVP. El manuscrit de pissarra continua sent difícil; aquesta versió afegeix retall i preprocés per millorar-lo.</p>
+    <p>Versió MVP v3. Ara separa càmera i galeria. El manuscrit de pissarra continua sent difícil; aquesta versió afegeix retall i preprocés per millorar-lo.</p>
   </footer>
 
   <script src="app.js"></script>

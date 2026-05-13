@@ -8,3 +8,13 @@ h1{font-family:'Kalam',cursive;margin:0;font-size:clamp(30px,6vw,52px);color:#17
 label{display:block;margin:10px 0;font-weight:700}input,select,textarea{width:100%;border:1px solid #d1d5db;border-radius:14px;padding:11px 12px;background:white;font:inherit}input[type=range]{padding:0}textarea{min-height:210px;resize:vertical;line-height:1.5}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.check{display:flex;gap:10px;align-items:center}.check input{width:auto}.status{font-weight:700;color:#1d4ed8}progress{width:100%;height:12px}
 .notesPage{margin-top:12px;min-height:420px;padding:38px 38px 46px;border-radius:18px;background:#fff;box-shadow:inset 0 0 0 1px #e5e7eb;background-image:linear-gradient(#ffffff 0,#ffffff 31px,var(--line) 32px),linear-gradient(90deg,transparent 0,transparent 42px,#fecaca 43px,transparent 44px);background-size:100% 32px,100% 100%;font-family:'Kalam','Patrick Hand',cursive;color:#111827;line-height:32px;font-size:24px;overflow:auto}.notesPage.compact{font-size:20px;line-height:28px;background-size:100% 28px,100% 100%}.notesPage.clean{background:#fffef8}.notesTitle{text-align:center;font-family:'Caveat',cursive;font-size:58px;line-height:1;color:#1744c6;margin:0 0 28px;text-decoration:underline;text-decoration-color:#49aa33;text-underline-offset:10px}.sectionTitle{display:inline-block;background:linear-gradient(transparent 45%,var(--green) 45%);font-weight:700;font-size:30px;margin:14px 0 4px;padding:0 6px}.notesPage p{margin:0 0 8px 28px}.notesPage ul,.notesPage ol{margin:0 0 10px 54px;padding:0}.notesPage li{padding-left:8px}.blue{color:#1744c6;font-weight:700}.doodle{text-align:center;color:#1744c6;font-size:36px;margin-top:24px}
 footer{text-align:center;color:var(--muted);padding:8px 20px 30px}@media(max-width:850px){.layout{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.topbar{align-items:flex-start}.notesPage{padding:28px 20px 34px;font-size:20px}.notesTitle{font-size:44px}}
+
+.uploadGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.secondaryUpload {
+  background: #eef6ff;
+  border-style: solid;
+}
